@@ -1,3 +1,3 @@
-# Creatuve-Coding-Two
+# Creative-Coding-Two
 
-This is a test
+This is all the stuff for John Montayne.
