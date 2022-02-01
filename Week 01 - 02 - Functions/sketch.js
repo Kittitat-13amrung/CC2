@@ -16,4 +16,5 @@ function draw() {
     if (showBoxes == true) {
         drawBoxes(numBoxes, boxWidth, boxHeight, boxSpacing);
     }
+
 }
