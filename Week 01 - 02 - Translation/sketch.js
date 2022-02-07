@@ -5,13 +5,13 @@ let rotationValue = 0;
 function setup() {
     createCanvas(500,500);
     background(120);
-    rectMode(CENTER);
+    rectMode(CORNER);
     angleMode(DEGREES);
 }
 
 function draw() {
     background(120);
     if (showGrid == true) {
-        grid(20, 20);
+        grid(20, 10);
     }
 }

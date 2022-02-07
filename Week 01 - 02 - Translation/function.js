@@ -7,7 +7,7 @@ function grid(numGridX, numGridY) {
             noFill();
             stroke(255, 50);
             translate(i * amountX, j * amountY);
-            rotate(rotationValue++);
+            // rotate(rotationValue++);
             rect(0, 0, amountX, amountY);
             pop();
         }

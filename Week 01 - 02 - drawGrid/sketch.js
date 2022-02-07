@@ -6,7 +6,7 @@ function setup() {
     background(120);
 
     if (showGrid == true) {
-        grid(20, 10);
+        grid(20, 30);
     }
 }
 
