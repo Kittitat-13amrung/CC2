@@ -1,8 +1,6 @@
 // Week 03 - Day 01
 
 //  siziable values for the bar chart
-let posX = 150;
-let posY = 500;
 
 // chart template
 let sideMargin = 20;
@@ -46,6 +44,8 @@ let colors;
 
 let translateX = 0;
 let translateY = 0;
+let posX;
+let posY;
 
 function setup() {
     createCanvas(750,550);
@@ -53,7 +53,9 @@ function setup() {
     // color is a p5 function
     colors = [color("#fd7f6f"), color("#7eb0d5"), color("#b2e061"), color("#bd7ebe")];
     tickColor = color('#ebebeb');
-    
+    posX = (width - chartWidth) / 2 ;
+    posY = (height + chartHeight) / 2;
+
     let listValues = data.map(function(x) {return x.value});
 
     maxValue = max(listValues);
@@ -81,16 +83,22 @@ function draw() {
     // be effective only inside the push and pop
     push();
 
-    // Draw barcharts
+    // Draw vertical bar chart
     // drawVerticalBarChart();
 
+    // Draw horizontal bar chart
     drawHorizontalBarChart();
     
     pop();
 }
 
 // map number(s) in reference to the chartHeight variable
-function scaleData(_num) {
+function scaleDataVertical(_num) {
     let newValue = map(_num, 0, maxValue, 0, chartHeight);
+    return newValue;
+}
+
+function scaleDataHorizontal(_num) {
+    let newValue = map(_num, 0, maxValue, 0, chartWidth);
     return newValue;
 }

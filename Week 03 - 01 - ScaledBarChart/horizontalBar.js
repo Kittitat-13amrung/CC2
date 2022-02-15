@@ -56,7 +56,7 @@ function drawHorizontalBarChart() {
             // push();
             // rotate(PI/2);
             textSize(32);
-            text(data[i].value, scaleData(data[i].value) + barSpacing + sideMargin*2, -barWidth1 * i - (barSpacing*i) - (barWidth1 / 2));
+            text(data[i].value, scaleDataHorizontal(data[i].value) + barSpacing + sideMargin*2, -barWidth1 * i - (barSpacing*i) - (barWidth1 / 2));
             // pop();
         }
         // display bar labels on bottom of each bar
@@ -69,7 +69,7 @@ function drawHorizontalBarChart() {
         noStroke();
         fill(colors[i%4]);
         // draw bars
-        rect(0, -barWidth1 * i - (barSpacing*i), scaleData(data[i].value), -barWidth1);
+        rect(0, -barWidth1 * i - (barSpacing*i), scaleDataHorizontal(data[i].value), -barWidth1);
     }
 
     // Chart lines

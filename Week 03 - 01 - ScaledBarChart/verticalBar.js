@@ -52,7 +52,7 @@ function drawVerticalBarChart() {
         // display bar values on top of each bar
         if (showValue == true) {
             textSize(32);
-            text(data[i].value, barWidth * i + (barSpacing*i) + (barWidth / 2), scaleData(-data[i].value) - sideMargin);
+            text(data[i].value, barWidth * i + (barSpacing*i) + (barWidth / 2), scaleDataVertical(-data[i].value) - sideMargin);
         }
         // display bar labels on bottom of each bar
         if (showLabel == true) {
@@ -62,7 +62,7 @@ function drawVerticalBarChart() {
         // modulus is used to looped through limited colour set
         fill(colors[i%4]);
         // draw bars
-        rect(barWidth * i + (barSpacing*i), 0, barWidth, scaleData(-data[i].value));
+        rect(barWidth * i + (barSpacing*i), 0, barWidth, scaleDataVertical(-data[i].value));
     }
 
     // Chart lines
