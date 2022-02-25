@@ -1,14 +1,14 @@
-class VerBarChart {
+class LineChart {
     constructor(_data) {
         this.data = _data;
-        this.title = "Text";
+        this.title = "Fruit Sales";
         this.labelSize = 18;
         this.valueSize = 16;
         this.posX = 100;    
         this.posY = 500;
         // chart template
         this.sideMargin = 20;
-        this.barSpacing = 15;
+        this.lineSpacing = 15;
         this.chartWidth = 500;
         this.chartHeight = 400;
         // ticks template
@@ -25,7 +25,7 @@ class VerBarChart {
         this.showValue = true;
         this.maxValue;
         this.remainingSpace;
-        this.barWidth;
+        this.lineWidth;
         this.maxValue;
         
         this.updateValues();
@@ -35,18 +35,18 @@ class VerBarChart {
         this.tickDistance = this.chartHeight / this.numTicks;
         // this.tickValue = this.maxValue / this.numTicks;
         // calculating the space remaining
-        // when taking the left and right side of the bar chart
-        // and all the barSpacing between each bars.
-        this.remainingSpace = this.chartWidth - (this.sideMargin * 2) - (this.barSpacing * (this.data.length - 1));
-        // calculating the width of each bar by
+        // when taking the left and right side of the line chart
+        // and all the lineSpacing between each lines.
+        this.remainingSpace = this.chartWidth - (this.sideMargin * 2) - (this.lineSpacing * (this.data.length - 1));
+        // calculating the width of each line by
         // dividing the remaingSpace by the amount of data
-        this.barWidth = this.remainingSpace / this.data.length;
+        this.lineWidth = this.remainingSpace / this.data.length;
 
         let listValues = this.data.map(function(x) {return x.value});
     
         this.maxValue = max(listValues);
         this.maxValue += 25;
-        
+    
         this.tickIncrement = this.maxValue/this.numTicks;
         // return this.maxValue;
     }
@@ -56,8 +56,8 @@ class VerBarChart {
         return newValue;    
     }
 
-    drawVerticalChartAxis() {
-        // translate bars by the sideMargin amount
+    drawLineChartAxis() {
+        // translate lines by the sideMargin amount
         translate(-this.sideMargin, 0);
     
         stroke(tickColor);
@@ -79,7 +79,7 @@ class VerBarChart {
         fill(tickColor);
         textSize(36);
         textAlign(CENTER, BOTTOM);
-        text(this.title, this.chartWidth/2, -this.chartHeight - this.sideMargin - this.barSpacing);
+        text(this.title, this.chartWidth/2, -this.chartHeight - this.sideMargin - this.lineSpacing);
         // Draw Some Ticks
         for (let i = 0; i <= this.numTicks; i++) {
             noStroke();
@@ -103,35 +103,52 @@ class VerBarChart {
         }
 
     
-        // translate bars by the sideMargin amount
-        translate(this.sideMargin, 0);
-        
-    
+        // translate lines by the sideMargin amount
+        translate(this.sideMargin, 0);     
+        this.drawLine();
         for (let i = 0; i < this.data.length; i++) {
             textAlign(CENTER, CENTER);
             
             noStroke();
             fill(tickColor);
-            // display bar values on top of each bar
+            // display line values on top of each line
             if (this.showValue == true) {
                 textSize(this.valueSize);
-                text(this.data[i].value, this.barWidth * i + (this.barSpacing*i) + (this.barWidth / 2), this.scaleDataVertical(-this.data[i].value) - this.sideMargin);
+                text(this.data[i].value, this.lineWidth * i + (this.lineSpacing*i) + (this.lineWidth / 2), this.scaleDataVertical(-this.data[i].value) - this.sideMargin);
             }
-            // display bar labels on bottom of each bar
+            // display line labels on bottom of each line
             if (this.showLabel == true) {
                 textSize(this.labelSize);
-                text(this.data[i].label, this.barWidth * i + (this.barSpacing*i) + (this.barWidth / 2), this.sideMargin);
+                text(this.data[i].label, this.lineWidth * i + (this.lineSpacing*i) + (this.lineWidth / 2), this.sideMargin);
             }
             // modulus is used to looped through limited colour set
             fill(colors[i%4]);
-            // draw bars
-            rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, this.scaleDataVertical(-this.data[i].value));
+            // draw lines
+            ellipse(this.lineWidth * i + (this.lineSpacing*i) + (this.lineWidth/2), this.scaleDataVertical(-this.data[i].value), 10);
         }
+        
+        // beginShape(LINES);
+        // stroke(tickColor);
+        // vertex(30, -20);
+        // vertex(85, -20);
+        // vertex(85, -75);
+        // vertex(30, -75);
+        // endShape();
 
         // Chart lines
-        this.drawVerticalChartAxis();
+        this.drawLineChartAxis();
 
         pop();
+    }
+
+    drawLine() {
+        noFill();
+        beginShape();
+        for (let i = 0; i < this.data.length; i++) {
+            stroke(colors[i%4]);
+            vertex(this.lineWidth * i + (this.lineSpacing*i) + (this.lineWidth/2), this.scaleDataVertical(-this.data[i].value));
+        }
+        endShape();
     }
 
 }

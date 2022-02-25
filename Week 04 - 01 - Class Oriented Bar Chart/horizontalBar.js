@@ -1,6 +1,9 @@
 class HorBarChart {
     constructor(_data) {
         this.data = _data;
+        this.title = "Text";
+        this.labelSize = 18;
+        this.valueSize = 16;
         this.posX = 150;    
         this.posY = 500;
         // chart template
@@ -67,7 +70,7 @@ class HorBarChart {
         fill(tickColor);
         textSize(36);
         textAlign(CENTER, BOTTOM);
-        text("Text", this.chartWidth/2, -this.chartHeight - this.sideMargin - this.barSpacing);
+        text(this.title, this.chartWidth/2, -this.chartHeight - this.sideMargin - this.barSpacing);
         
         // Draw Some Ticks
         for (let i = 0; i <= this.numTicks; i++) {
@@ -106,13 +109,13 @@ class HorBarChart {
             if (this.showValue == true) {
                 // push();
                 // rotate(PI/2);
-                textSize(32);
-                text(this.data[i].value, this.scaleDataHorizontal(this.data[i].value) + this.barSpacing + this.sideMargin*2, -this.barWidth * i - (this.barSpacing*i) - (this.barWidth / 2));
+                textSize(this.valueSize);
+                text(this.data[i].value, this.scaleDataHorizontal(this.data[i].value) + this.valueSize*2, -this.barWidth * i - (this.barSpacing*i) - (this.barWidth / 2));
                 // pop();
             }
             // display bar labels on bottom of each bar
             if (this.showLabel == true) {
-                textSize(24);
+                textSize(this.labelSize);
                 text(this.data[i].label, -this.sideMargin, -this.barWidth * i - (this.barSpacing*i) - (this.barWidth / 2));
 
             }
