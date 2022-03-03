@@ -1,7 +1,7 @@
 class HorBarChart {
-    constructor(_data) {
+    constructor(_data, _posX, _posY) {
         this.data = _data;
-        this.title = "Text";
+        this.title;
         this.labelSize = 18;
         this.valueSize = 16;
         this.posX = 150;    
@@ -9,10 +9,10 @@ class HorBarChart {
         // chart template
         this.sideMargin = 20;
         this.barSpacing = 15;
-        this.chartWidth = 400;
-        this.chartHeight = 400;
+        this.chartWidth;
+        this.chartHeight;
         // ticks template
-        this.numTicks = 6;
+        this.numTicks;
         this.tickLength = 10;
 
         // calculate distance between ticks
@@ -21,8 +21,9 @@ class HorBarChart {
         this.tickIncrement;
         this.tickThickness = 2;
         
-        this.showLabel = true;
-        this.showValue = true;
+        this.showLabel;
+        this.showBarValue;
+        this.showValue;
         this.maxValue;
         this.remainingSpace;
         this.barWidth;
@@ -32,6 +33,21 @@ class HorBarChart {
     }
 
     updateValues() {
+        this.title = params.Title;
+        this.chartWidth = params.chartWidth;
+        this.chartHeight = params.chartHeight;
+        this.numTicks = params.numOfTicks;
+
+        this.showLabel = params.showLabel;
+        this.showValue = params.showValue;
+        this.showBarValue = params.showBarValue;
+
+        if (params.chartWidth <= 130 && params.showValue) {
+            params.showValue = false;   
+        } else if (params.chartWidth > 130 && params.showValue == false) {
+            params.showValue = true;
+        }
+
         this.tickDistance = this.chartWidth / this.numTicks;
         // this.tickValue = this.maxValue / this.numTicks;
         // calculating the space remaining
@@ -81,8 +97,10 @@ class HorBarChart {
             // textAlign takes horizontal axis then vertical axis
             // setting the text to start from the right center
             textAlign(RIGHT, CENTER);
-            let tickFloorValue = nfc(i * this.tickIncrement, 0); //rounding off the values
-            text(tickFloorValue, i * this.tickDistance + 5, this.sideMargin + 5);
+            if (this.showValue) {
+                let tickFloorValue = nfc(i * this.tickIncrement, 0); //rounding off the values
+                text(tickFloorValue, i * this.tickDistance + 5, this.sideMargin + 5);
+            }
             // console.log(tickIncrement * i);
             stroke(90);
             strokeWeight(1);
@@ -106,15 +124,12 @@ class HorBarChart {
             noStroke();
             fill(tickColor);
             // display bar values on top of each bar
-            if (this.showValue == true) {
-                // push();
-                // rotate(PI/2);
+            if (this.showBarValue) {
                 textSize(this.valueSize);
                 text(this.data[i].value, this.scaleDataHorizontal(this.data[i].value) + this.valueSize*2, -this.barWidth * i - (this.barSpacing*i) - (this.barWidth / 2));
-                // pop();
             }
             // display bar labels on bottom of each bar
-            if (this.showLabel == true) {
+            if (this.showLabel) {
                 textSize(this.labelSize);
                 text(this.data[i].label, -this.sideMargin, -this.barWidth * i - (this.barSpacing*i) - (this.barWidth / 2));
 
