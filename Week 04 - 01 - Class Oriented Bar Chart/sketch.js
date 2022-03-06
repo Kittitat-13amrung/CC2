@@ -68,13 +68,14 @@ let params = {
 };
 
 let obj = {};
-
+let tempValue = 0;
 
 let temp1;
 let temp2;
 let temp3;
 let temp4;
-let temp5;
+let lineGraph;
+let candleGraph;
 var gui;
 
 let colors;
@@ -87,7 +88,7 @@ let translateY = 0;
 // }
 
 function setup() {
-    createCanvas(1200,550);
+    createCanvas(1350,1200);
     background(90);
     gui = createGui('charts');
     gui.setPosition(width + 50, 50);
@@ -115,14 +116,16 @@ function setup() {
 
     // color is a p5 function
     colors = [color("#fd7f6f"), color("#7eb0d5"), color("#b2e061"), color("#bd7ebe")];
+    candleColors = [color("#86B049"), color("#CF0029")];
     tickColor = color('#ebebeb');
     temp1 = new HorBarChart(data);
     temp2 = new VerBarChart(data);
-    temp3 = new StackedPercentBarChart(data2);
-    temp4 = new StackedBarChart(data2);
+    temp3 = new StackedPercentBarChart(data03);
+    temp4 = new StackedBarChart(data03);
     temp5 = new LineChart(data);
     temp6 = new PieChart(data);
-    art = new BezierChart(data03);
+    lineGraph = new BezierChart(data03);
+    candleGraph = new candleStick(data03);
 }
 
 function draw() {
@@ -134,17 +137,142 @@ function draw() {
     // temp2.render();
     // temp2.updateValues();
     
-    // temp3.render();
-    // temp3.updateValues();
+    temp3.render();
+    temp3.updateValues();
 
-    // temp4.render();
-    // temp4.updateValues();
+    temp4.render();
+    temp4.updateValues();
 
     // temp5.render();
 
     // temp6.render();
     // temp6.updateValues();
 
-    art.render();
+    push();
+    // lineGraph.render();
+    // lineGraph.updateValues();
+    pop();
+
+    
+    push();
+    candleGraph.render();
+    candleGraph.updateValues();
+    pop();
+    
+    // for (let i = 0; i < candleGraph.data.lenght; i++) {
+
+    //     if (mouseX > candleGraph.posX + (9 * i) - 3.5 && mouseX < candleGraph.posX + (9 * i) + 3.5 && mouseY > -candleGraph.scaleDataVertical(candleGraph.data[i].openPrice) + candleGraph.scaleDataVertical(candleGraph.data[i].closePrice)) {
+    //         cursor(HAND);
+    //         console.log("red");
+    //     } else {
+    //         // cursor('grab');
+    //     }
+    // }
+    fill(255);
+    // rect(0, 100, 50, animate(300));
 
 }
+
+// function animate(_num) {
+    
+//     if (tempValue < _num) {
+//         tempValue += 10;
+//         return tempValue;
+//     } else if (tempValue == _num) {
+//         tempValue = _num;
+//         return tempValue;
+//     }
+//     console.log(tempValue);
+
+// }
+
+// if (this.data[i].openPrice < this.data[i].closePrice) {
+//     push();
+//         // modulus is used to looped through limited colour set
+//         fill(candleColors[0]);
+//         rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, this.scaleData(-this.data[i].openPrice));
+//         translate(0, this.scaleData(-this.data[i].openPrice));
+//         fill(candleColors[1]);
+//         rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, -this.scaleData(this.data[i].openPrice - this.data[i].closePrice));
+//         // console.log(this.scaleData(-this.data[i].value[j], this.tempArray[i]));
+//         // display bar values on top of each bar
+//         // if (this.showValue == true) {
+//         //     fill(60);
+//         //     textSize(this.valueSize);
+//         //     let stackValue = this.data[i].value[j];
+//         //     text(stackValue, this.barWidth / 2 + this.barWidth * i + (this.barSpacing*i), this.scaleData(this.data[i].value[j]) / 2);
+//         //     // console.log((this.tempArray[i] / this.data[i].value[j]) * 100)
+//         // }
+    
+//     pop();
+// } else {
+//     push();
+//         // modulus is used to looped through limited colour set
+//         fill(candleColors[1]);
+//         rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, -this.scaleData(this.data[i].closePrice));
+//         translate(0, -this.scaleData(this.data[i].closePrice));
+//         fill(candleColors[0]);
+//         rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, -this.scaleData(this.data[i].closePrice - this.data[i].openPrice));
+//     pop();
+// }
+
+
+// if (this.data[i].openPrice < this.data[i].closePrice) {
+//     push();
+//         // modulus is used to looped through limited colour set
+//         fill(candleColors[0]);
+//         rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, -this.scaleData(this.data[i].openPriceAnimate));
+//         translate(0, this.scaleData(-this.data[i].openPrice));
+//         fill(candleColors[1]);
+//         rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, -this.scaleData(this.data[i].closePriceAnimate));
+//         // console.log(this.scaleData(-this.data[i].value[j], this.tempArray[i]));
+//         // display bar values on top of each bar
+//         // if (this.showValue == true) {
+//         //     fill(60);
+//         //     textSize(this.valueSize);
+//         //     let stackValue = this.data[i].value[j];
+//         //     text(stackValue, this.barWidth / 2 + this.barWidth * i + (this.barSpacing*i), this.scaleData(this.data[i].value[j]) / 2);
+//         //     // console.log((this.tempArray[i] / this.data[i].value[j]) * 100)
+//         // }
+
+//         // if (this.data[i].openPriceAnimate < this.data[i].openPrice) {
+//         //     this.data[i].openPriceAnimate += 50;   
+//         // } 
+
+//         // if (this.data[i].openPriceAnimate >= this.data[i].openPrice) {
+//         //     if (this.data[i].closePriceAnimate < this.scaleData(this.data[i].openPrice + this.data[i].closePrice)) {
+//         //         this.data[i].closePriceAnimate += 15;   
+//         //         console.log(this.data[i].closePrice - this.data[i].openPrice);
+//         //     } 
+//         // }
+    
+//         // fill(candleColors[0]);
+//         // rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, this.scaleData(-this.data[i].openPrice));
+//         // translate(0, this.scaleData(-this.data[i].openPrice));
+//         // fill(candleColors[1]);
+//         // rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, -this.scaleData(this.data[i].openPrice - this.data[i].closePrice));
+
+//     pop();
+// } else {
+//     push();
+//         // modulus is used to looped through limited colour set
+//         fill(candleColors[1]);
+//         rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, -this.scaleData(this.data[i].closePriceAnimate));
+//         translate(0, -this.scaleData(this.data[i].closePriceAnimate));
+//         fill(candleColors[0]);
+//         rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, -this.scaleData(this.data[i].openPriceAnimate));
+
+//         if (this.data[i].closePriceAnimate < this.data[i].closePrice) {
+//             this.data[i].closePriceAnimate += 50;   
+//         } 
+
+//         if (this.data[i].closePriceAnimate >= this.data[i].closePrice) {
+//             if (this.data[i].openPriceAnimate < this.scaleData(this.data[i].closePrice + this.data[i].openPrice)) {
+//                 // console.log(this.data[i].closePrice - this.data[i].openPrice);
+//                 this.data[i].openPriceAnimate += 15;   
+//             } 
+//         }
+
+
+//     pop();
+// }

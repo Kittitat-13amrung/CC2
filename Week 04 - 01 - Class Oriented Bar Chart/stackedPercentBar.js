@@ -2,10 +2,10 @@ class StackedPercentBarChart {
     constructor(_data) {
         this.data = _data;
         this.title = "Text";
-        this.labelSize = 18;
+        this.labelSize = 12;
         this.valueSize = 16;
         this.posX = 100;    
-        this.posY = 500;
+        this.posY = 1050;
         // chart template
         this.sideMargin = 20;
         this.barSpacing = 15;
@@ -30,6 +30,8 @@ class StackedPercentBarChart {
         this.sumValues = 0;
         this.tempValue = 0;
         this.tempArray = [];
+        this.listOpen = this.data.map(function() {return 0});
+        this.listClose = this.data.map(function() {return 0});
         
         this.updateValues();
     }
@@ -64,13 +66,14 @@ class StackedPercentBarChart {
         // }
 
         // let listValues = this.data.map((num) => max(num.value));
-        let sumValues;
-        for (let i = 0; i < this.data.length; i++) {
-                sumValues = this.data[i].value.reduce(
-                    (prevValue, curValue) => 
-                    this.tempArray[i] = prevValue + curValue
-                    );
-        }
+        // let sumValues;
+        // for (let i = 0; i < this.data.length; i++) {
+        //         sumValues = this.data[i].value.reduce(
+        //             (prevValue, curValue) => 
+        //             this.tempArray[i] = prevValue + curValue
+        //             );
+        // }
+        this.listValues = this.data.map(function(x) {return x.openPrice + x.closePrice});
     
         // this.tempArray.push(listValues);
         // this.maxValue = max(listValues);
@@ -129,7 +132,7 @@ class StackedPercentBarChart {
             // setting the text to start from the right center
             textAlign(RIGHT, CENTER);
             let tickFloorValue = nfc(i * this.tickIncrement, 0); //rounding off the values
-            text(tickFloorValue, -15, -i * this.tickDistance);
+            text(tickFloorValue + "%", -15, -i * this.tickDistance);
             // console.log(tickIncrement * i);
             fill(tickColor);
             stroke(90);
@@ -153,31 +156,49 @@ class StackedPercentBarChart {
             noStroke();
             // display bar labels on bottom of each bar
             if (this.showLabel == true) {
+                if (i % 7 == 0) {
                 textSize(this.labelSize);
-                text(this.data[i].label, this.barWidth * i + (this.barSpacing*i) + (this.barWidth / 2), this.sideMargin);
+                text(this.data[i].date, this.barWidth * i + (this.barSpacing*i) + (this.barWidth / 2), this.sideMargin);
+                }
             }
             push();
-            for (let j = 0; j < this.data[i].value.length; j++) {
+            // for (let j = 0; j < this.data[i].value.length; j++) {
                 // modulus is used to looped through limited colour set
-                fill(colors[j%3]);
+                fill(candleColors[0]);
                 // translate(0, this.scaleData(-this.data[i].value[j]));
                 // console.log(-this.data[i].value[j]);
-                rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, this.scaleData(-this.data[i].value[j], this.tempArray[i]));
-                translate(0, this.scaleData(-this.data[i].value[j], this.tempArray[i]));
-                // console.log(this.scaleData(-this.data[i].value[j], this.tempArray[i]));
+                rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, this.scaleData(-this.listOpen[i], this.listValues[i]));
+                translate(0, this.scaleData(-this.data[i].openPrice, this.listValues[i]));
+                fill(candleColors[1]);
+                rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, this.scaleData(-this.listClose[i], this.listValues[i]));
                 // display bar values on top of each bar
-                if (this.showValue == true) {
-                    fill(60);
-                    textSize(this.valueSize);
-                    let percentage = nfc(this.data[i].value[j] /this.tempArray[i] * 100, 0);
-                    text(percentage, this.barWidth / 2 + this.barWidth * i + (this.barSpacing*i), this.scaleData(this.data[i].value[j], this.tempArray[i]) / 2);
-                    // console.log((this.tempArray[i] / this.data[i].value[j]) * 100)
+                // if (this.showValue == true) {
+                //     fill(60);
+                //     textSize(this.valueSize);
+                //     let percentage = nfc(this.data[i].value[j] /this.tempArray[i] * 100, 0);
+                //     text(percentage, this.barWidth / 2 + this.barWidth * i + (this.barSpacing*i), this.scaleData(this.data[i].value[j], this.tempArray[i]) / 2);
+                //     // console.log((this.tempArray[i] / this.data[i].value[j]) * 100)
+                // }
+                // console.log(this.scaleData(-this.data[i].value[j], this.tempArray[i]));
+            // }
+
+            if (this.listOpen[i] < this.data[i].openPrice) {
+                this.listOpen[i] += 50;
+            }
+
+            if (this.listOpen[i] > this.data[i].openPrice) {
+                if (this.listClose[i] < this.data[i].closePrice) {
+                    this.listClose[i] += 50;
                 }
             }
             
+            
             pop();
             
+            
         }
+        fill(30);
+        rect(-this.sideMargin, -this.chartHeight, this.chartWidth, -10);
 
         // Chart lines
         this.drawVerticalChartAxis();

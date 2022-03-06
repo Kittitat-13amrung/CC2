@@ -7,12 +7,12 @@ class BezierChart {
         this.highPrice = this.data.highPrice;
         this.lowPrice = this.data.lowPrice;
         this.adjustedPrice = this.data.adjustedPrice;
-        this.title = "Ethereum Price in the Market Over a Period of 4 Months";
+        this.title = "Ethereum Price in the Market Over a Period of One Year";
         this.titleSize = 20;
         this.labelSize = 10;
         this.valueSize = 16;
         this.posX = 100;    
-        this.posY = 475;
+        this.posY = 500;
         // chart template
         this.sideMargin = 20;
         this.lineSpacing = 15;
@@ -58,7 +58,10 @@ class BezierChart {
 
         this.listValues = this.data.map(function(x) {return x.adjustedPrice});
         // this.listYears = this.data.map(function(x) {return x[2]});
-        this.listDates = this.data.map(function(y) {return y.date});
+        this.listDates = this.data.map(function(y) {
+
+            return y.date
+        });
         
         // for (let i = 0; i < this.data.length; i++) {
         //     if (this.sortData) {
@@ -68,7 +71,7 @@ class BezierChart {
         // }
 
                 
-                console.log(this.listDates)
+                // console.log(this.listDates)
         
         this.maxValue = max(this.listValues);
         this.maxValue += min(this.listValues);
@@ -165,18 +168,11 @@ class BezierChart {
                 rotate(-PI/2)
                 noStroke();
                 textSize(this.labelSize);
-                text(this.listDates[this.listDates.length%j], -this.sideMargin *2, (this.tickWidthDistance/2) * j - this.sideMargin);
-                console.log(this.listDates[54/9]);
+                text(this.listDates[this.listDates.length%(j)], -this.sideMargin *2, (this.tickWidthDistance/2) * j - this.sideMargin);
+                // console.log(this.listDates[this.listDates.length%(j)]);
                 pop();
             }
         }
-        // beginShape(LINES);
-        // stroke(tickColor);
-        // vertex(30, -20);
-        // vertex(85, -20);
-        // vertex(85, -75);
-        // vertex(30, -75);
-        // endShape();
 
         // Chart lines
         this.drawLineChartAxis();
@@ -198,7 +194,6 @@ class BezierChart {
         curveVertex(this.chartWidth, this.scaleDataVertical(-this.data[this.data.length - 1].adjustedPrice));
         curveVertex(this.chartWidth, this.scaleDataVertical(-this.data[this.data.length - 1].adjustedPrice));
         endShape();
-        // console.log(this.scaleDataVertical(-this.data[this.data.length - 1][4]))
     }
 
 }

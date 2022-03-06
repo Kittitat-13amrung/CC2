@@ -25,8 +25,7 @@ class PieChart {
     
     updateValues() {
         
-        let sumValues;
-        sumValues = this.listValues.reduce(
+        this.listValues.reduce(
             (prevValue, curValue) => 
             this.maxValue = prevValue + curValue
             ); 
