@@ -38,6 +38,8 @@ class VerBarChart {
     }
     
     updateValues() {
+            // if and else condition to check if the chart
+    // gets selected in the GUI
         if (params2.Graph == 'vertical') {
             this.chartHeight = params2.chartHeight;
             this.chartWidth = params2.chartWidth;
@@ -62,7 +64,6 @@ class VerBarChart {
         }
 
         this.tickDistance = this.chartHeight / this.numTicks;
-        // this.tickValue = this.maxValue / this.numTicks;
         // calculating the space remaining
         // when taking the left and right side of the bar chart
         // and all the barSpacing between each bars.
@@ -71,21 +72,27 @@ class VerBarChart {
         // dividing the remaingSpace by the amount of data
         this.barWidth = this.remainingSpace / this.data.length;
 
+            // push the calculations to get the total value for stacking into the array
         let listValues = this.data.map(function(x) {return x.value});
     
+        // get max and min of the value and increment together
+        // to increase the highest value for tick increment
         this.maxValue = max(listValues);
         this.maxValue += min(listValues);
         
+            // the no. of increments needed for the axis
         this.tickIncrement = this.maxValue/this.numTicks;
         // return this.maxValue;
     }
-
+  // a method which map the extracted data
+  // and range it to the height of the chart
     scaleData(_num) {
         let newValue = map(_num, 0, this.maxValue, 0, this.chartHeight);
         return newValue;    
     }
 
-    drawVerticalChartAxis() {
+      // a method to draw the axis
+    drawChartAxis() {
         // translate bars by the sideMargin amount
         translate(-this.sideMargin, 0);
     
@@ -97,25 +104,7 @@ class VerBarChart {
         line(0, 0, this.chartWidth, 0);
     }
 
-
-    render() {
-        // this.updateValues();
-        
-        push();
-        
-        translate(this.posX, this.posY);
-        
-        fill(tickColor);
-        textSize(this.titleSize);
-        textAlign(CENTER, BOTTOM);
-
-        if (this.titleAlign == 'top') {
-            text(this.title, this.chartWidth/2, -this.chartHeight - this.sideMargin - this.barSpacing*3);
-        } else if (this.titleAlign == 'bottom') {
-            text(this.title, this.chartWidth/2, this.sideMargin * 5);
-        }
-
-        // Draw Some Ticks
+    drawTicks() {
         for (let i = 0; i <= this.numTicks; i++) {
             noStroke();
             // tick values
@@ -136,12 +125,36 @@ class VerBarChart {
             // draw ticks
             line(-1,-this.tickDistance * i, -this.tickLength, -this.tickDistance * i);
         }
+    }
+
+    // draw bar chart
+    render() {
+        
+        push();
+        
+        translate(this.posX, this.posY);
+        
+        fill(tickColor);
+        textSize(this.titleSize);
+        textAlign(CENTER, BOTTOM);
+
+            // chart title
+    // check if GUI's params has been changed
+    // if so arranged it to a new layout
+        if (this.titleAlign == 'top') {
+            text(this.title, this.chartWidth/2, -this.chartHeight - this.sideMargin - this.barSpacing*3);
+        } else if (this.titleAlign == 'bottom') {
+            text(this.title, this.chartWidth/2, this.sideMargin * 5);
+        }
+
+        // Draw Some Ticks
+        this.drawTicks();
 
     
         // translate bars by the sideMargin amount
         translate(this.sideMargin, 0);
         
-    
+        // for loop used to draw bars, labels, values, dates etc.
         for (let i = 0; i < this.data.length; i++) {
             textAlign(CENTER, CENTER);
             
@@ -167,6 +180,10 @@ class VerBarChart {
 
             textAlign(LEFT, CENTER);
     
+            
+      // legends
+      // check if GUI's params is changed
+      // if so, changed the layout of legends
             if (this.showLegend) {
                 if (this.legendAlign == "right") {
                     push();
@@ -196,7 +213,7 @@ class VerBarChart {
         }
 
         // Chart lines
-        this.drawVerticalChartAxis();
+        this.drawChartAxis();
 
         pop();
     }

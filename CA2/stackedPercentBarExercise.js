@@ -1,16 +1,11 @@
-class StackedBarExerciseChart {
+class StackedPercentExerciseBarChart {
     constructor(_data, _posX, _posY) {
         this.data = _data;
-        this.title = "Fruits Sold in Europe in 2022";
+        this.title = "Fruits Sold in Europe in One Year";
         this.titleAlign = 'top';
         this.titleSize = 22;
         this.labelSize = 12;
         this.valueSize = 12;
-        this.showLabel = true;
-        this.showValue = true;
-        this.showLegend = true;
-        this.legendAlign = "top";
-        this.scaleTheChart = 1;
         this.posX = _posX;    
         this.posY = _posY;
         // chart template
@@ -27,14 +22,17 @@ class StackedBarExerciseChart {
         // divide it by the number of ticks required
         this.tickIncrement;
         this.tickThickness = 2;
-        
+        // booleans to show/hide labels
+        this.showLabel = true;
+        this.showValue = true;
+        this.showLegend = true;
+        this.legendAlign = "top";
         this.maxValue;
         this.remainingSpace;
         this.barWidth;
         this.maxValue;
         this.sumValues = 0;
         this.tempValue = 0;
-        this.listValues;
         this.tempArray = [];
         this.listOpen = this.data.map(function() {return 0});
         this.listClose = this.data.map(function() {return 0});
@@ -42,18 +40,42 @@ class StackedBarExerciseChart {
         this.updateValues();
     }
 
+    // update values in the chart so it's flexible
     updateValues() {
-        if (params3.Graph == "stacked") {
+        this.tickDistance = this.chartHeight / this.numTicks;
+        // calculating the space remaining
+        // when taking the left and right side of the bar chart
+        // and all the barSpacing between each bars.
+        this.remainingSpace = this.chartWidth - (this.sideMargin * 2) - (this.barSpacing * (this.data.length - 1));
+        // calculating the width of each bar by
+        // dividing the remaingSpace by the amount of data
+        this.barWidth = this.remainingSpace / this.data.length;
+
+                // storing the new mapped array with the calculations
+                // to get the total values in the array
+        let sumValues;
+        for (let i = 0; i < this.data.length; i++) {
+                sumValues = this.data[i].value.reduce(
+                    (prevValue, curValue) => 
+                    this.tempArray[i] = prevValue + curValue
+                    );
+        }
+
+            // the no. of increments needed for the axis
+        this.tickIncrement = 100 / this.numTicks;
+
+            // if and else condition to check if the chart
+    // gets selected in the GUI
+        if (params3.Graph == "stackedPercent") {
             this.chartHeight = params3.chartHeight;
             this.chartWidth = params3.chartWidth;
+            this.titleSize = params3.titleSize;
+            this.titleAlign = params3.titleAlign;
             this.numTicks = params3.numOfTicks;
             this.showLegend = params3.showLegend;
-            this.titleAlign = params3.titleAlign;
-            this.titleSize = params3.titleSize;
-            this.showLabel = params3.showLabel;
             this.showValue = params3.showValue;
+            this.showLabel = params3.showLabel;
             this.legendAlign = params3.legendAlign;
-            this.scaleTheChart = params3.scaleTheChart;
         } else {
             this.chartHeight = this.chartHeight;
             this.chartWidth = this.chartWidth;
@@ -63,43 +85,19 @@ class StackedBarExerciseChart {
             this.showLegend = this.showLegend;
             this.showValue = this.showValue;
             this.legendAlign = this.legendAlign;
-            this.scaleTheChart = this.scaleTheChart;
         }
-
-        this.tickDistance = this.chartHeight / this.numTicks;
-        // this.tickValue = this.maxValue / this.numTicks;
-        // calculating the space remaining
-        // when taking the left and right side of the bar chart
-        // and all the barSpacing between each bars.
-        this.remainingSpace = this.chartWidth - (this.sideMargin * 2) - (this.barSpacing * (this.data.length - 1));
-        // calculating the width of each bar by
-        // dividing the remaingSpace by the amount of data
-        this.barWidth = this.remainingSpace / this.data.length;
-
-            let sumValues;
-            for (let i = 0; i < this.data.length; i++) {
-                        sumValues = this.data[i].value.reduce(
-                                (prevValue, curValue) => 
-                                this.tempArray[i] = prevValue + curValue
-                                );
-            }
-                    
-                    
-            this.maxValue = max(this.tempArray);
-            this.maxValue += min(this.tempArray);
-                    
     
-    
-        this.tickIncrement = this.maxValue/this.numTicks;
-
     }
     
-    scaleData(_num) {
-        let newValue = map(_num, 0, this.maxValue, 0, this.chartHeight);
+      // a method which map the extracted data
+  // and range it to the height of the chart
+    scaleData(_num, _array) {
+        let newValue = map(_num, 0, _array, 0, this.chartHeight);
         return newValue;    
     }
 
-    drawVerticalChartAxis() {
+     // a method that draws the chart axes
+    drawChartAxis() {
         // translate bars by the sideMargin amount
         translate(-this.sideMargin, 0);
     
@@ -110,27 +108,9 @@ class StackedBarExerciseChart {
         // Line X Axis
         line(0, 0, this.chartWidth, 0);
     }
-
-    render() {
-
-        // this.updateValues();
-        
-        push();
-        scale(this.scaleTheChart);
-        
-        translate(this.posX, this.posY);
-        
-        fill(tickColor);
-        textSize(this.titleSize);
-        textAlign(CENTER, BOTTOM);
-
-        if (this.titleAlign == 'top') {
-            text(this.title, this.chartWidth/2, -this.chartHeight - this.sideMargin - this.barSpacing*3);
-        } else if (this.titleAlign == 'bottom') {
-            text(this.title, this.chartWidth/2, this.sideMargin + this.barSpacing*7);
-        }
-
-        // Draw Some Ticks
+    
+      // a method to draw ticks
+    drawTicks() {
         for (let i = 0; i <= this.numTicks; i++) {
             noStroke();
             // tick values
@@ -140,8 +120,7 @@ class StackedBarExerciseChart {
             // setting the text to start from the right center
             textAlign(RIGHT, CENTER);
             let tickFloorValue = nfc(i * this.tickIncrement, 0); //rounding off the values
-            text(tickFloorValue, -15, -i * this.tickDistance);
-            // console.log(tickIncrement * i);
+            text(tickFloorValue + "%", -15, -i * this.tickDistance);
             fill(tickColor);
             stroke(90);
             strokeWeight(1);
@@ -152,46 +131,63 @@ class StackedBarExerciseChart {
             // draw ticks
             line(-1,-this.tickDistance * i, -this.tickLength, -this.tickDistance * i);
         }
+    }
 
-    
+    // a method to render the chart
+    render() {
+
+        push(); //push is used to prevent translation messing up other objects
+        
+        translate(this.posX, this.posY);
+        
+        fill(tickColor);
+        textSize(this.titleSize);
+        textAlign(CENTER, BOTTOM);
+            // chart title
+    // check if GUI's params has been changed
+    // if so arranged it to a new layout
+        if (this.titleAlign == 'top') {
+            text(this.title, this.chartWidth/2, -this.chartHeight - this.sideMargin - this.barSpacing*3);
+        } else if (this.titleAlign == 'bottom') {
+            text(this.title, this.chartWidth/2, this.sideMargin + this.barSpacing*7);
+        }
+        // Draw Some Ticks
+        this.drawTicks();
+
+
         // translate bars by the sideMargin amount
         translate(this.sideMargin, 0);
-        
-    
+
+    // for loop used to draw bars, labels, values, dates etc.
         for (let i = 0; i < this.data.length; i++) {
             textAlign(CENTER, CENTER);
-            
+
             noStroke();
-            fill(tickColor);
             // display bar labels on bottom of each bar
             if (this.showLabel) {
                 textSize(this.labelSize);
                 text(this.data[i].label, this.barWidth * i + (this.barSpacing*i) + (this.barWidth / 2), this.sideMargin);
             }
-
             push();
             for (let j = 0; j < this.data[i].value.length; j++) {
                 // modulus is used to looped through limited colour set
                 fill(colors[j%3]);
-                // translate(0, this.scaleData(-this.data[i].value[j]));
-                // console.log(-this.data[i].value[j]);
                 rect(this.barWidth * i + (this.barSpacing*i), 0, this.barWidth, this.scaleData(-this.data[i].value[j], this.tempArray[i]));
                 translate(0, this.scaleData(-this.data[i].value[j], this.tempArray[i]));
-                // console.log(this.scaleData(-this.data[i].value[j], this.tempArray[i]));
-                // display bar values on top of each bar
                 if (this.showValue) {
                     fill(60);
                     textSize(this.valueSize);
-                    let stackValue = this.data[i].value[j];
-                    text(stackValue, this.barWidth / 2 + this.barWidth * i + (this.barSpacing*i), this.scaleData(this.data[i].value[j], this.tempArray[i]) / 2);
-                    // console.log((this.tempArray[i] / this.data[i].value[j]) * 100)
+                    let percentage = nfc(this.data[i].value[j] /this.tempArray[i] * 100, 0);
+                    text(percentage, this.barWidth / 2 + this.barWidth * i + (this.barSpacing*i), this.scaleData(this.data[i].value[j], this.tempArray[i]) / 2);
                 }
             }
-
-            pop();
             
+            pop();
             textAlign(LEFT, CENTER);
-        
+            
+                // legends
+    // check if GUI's params is changed
+    // if so, changed the layout of legends
             if (this.showLegend) {
                 if (this.legendAlign == "right") {
                     push();
@@ -200,6 +196,7 @@ class StackedBarExerciseChart {
                     textSize(this.labelSize);
                     rectMode(CENTER);
                     fill(colors[i%4]);
+                    // draw legends
                     rect(-10, i * this.sideMargin * 4, 10, 10);
                     fill(255);
                     text(this.data[i].label, 0, i * this.sideMargin * 4);
@@ -212,19 +209,19 @@ class StackedBarExerciseChart {
                     textSize(this.labelSize);
                     rectMode(CENTER);
                     fill(colors[i%4]);
+                    // draw legends
                     rect(i * (this.sideMargin + this.barWidth) + 30, 0, 10, 10);
                     fill(255);
                     text(this.data[i].label, i * (this.sideMargin + this.barWidth) + 50, 1);
                     pop();
                 }
             }
+
         }
-
-
+        
         // Chart lines
-        this.drawVerticalChartAxis();
+        this.drawChartAxis();
 
         pop();
     }
-
 }

@@ -2,8 +2,9 @@ class PieChart {
     constructor(_data, _posX, _posY) {
         this.data = _data;
         this.title = "Fruit Sales";
-        this.labelSize = 18;
-        this.valueSize = 16;
+        this.titleSize = 22;
+        this.labelSize = 12;
+        this.valueSize = 12;
         this.posX = _posX;    
         this.posY = _posY;
         // chart template
@@ -34,6 +35,8 @@ class PieChart {
 
     }
 
+    // a method which map the extracted data
+  // and range it to the height of the chart
     scaleData(_num) {
         let newValue = map(_num, 0, this.maxValue, 0, this.maxAngle);
         return newValue;    
@@ -57,23 +60,27 @@ class PieChart {
         push();
         
         translate(this.posX + 200, this.posY - 200);
+
+        // draw pie chart
         this.drawPie();
         
         fill(tickColor);
-        textSize(36);
+        // draw title
+        textSize(this.titleSize);
         textAlign(CENTER, BOTTOM);
-        text(this.title, 0, -this.diameter/2 - 25);
+        text(this.title, 0, -this.diameter/2 - 100);
 
     
         for (let i = 0; i < this.data.length; i++) {
             textAlign(LEFT, CENTER);
             
             // display line labels on bottom of each line
-            if (this.showLabel == true) {
+            if (this.showLabel) {
                 // modulus is used to looped through limited colour set
                 fill(colors[i%4]);
                 textSize(this.labelSize);
                 rectMode(CENTER);
+                // draw legends
                 rect(this.diameter - 100, -this.diameter/2 - 2 + 50 + (i * 50), 10, 10);
                 text(this.data[i].label, this.diameter - 85, -this.diameter/2 + 50 + (i * 50));
             }
@@ -83,6 +90,8 @@ class PieChart {
         pop();
     }
 
+    // draw an arc and basically translate it
+    // to the end of the last arc
     drawPie() {
         let lastAngle = 0;
         for (let i = 0; i < this.data.length; i++) {
