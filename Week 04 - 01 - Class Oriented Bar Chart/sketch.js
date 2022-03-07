@@ -131,8 +131,8 @@ function setup() {
 function draw() {
 
     background(30);
-    // temp1.render();
-    // temp1.updateValues();
+    temp1.render();
+    temp1.updateValues();
 
     // temp2.render();
     // temp2.updateValues();

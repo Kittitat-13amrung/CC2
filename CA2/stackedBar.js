@@ -1,13 +1,18 @@
 class StackedBarChart {
-    constructor(_data) {
+    constructor(_data, _posX, _posY) {
         this.data = _data;
-        this.title = "Ethereum";
+        this.title = "Increase/Decrease In Ethereum Prices Over One Year";
+        this.titleAlign = 'top';
+        this.titleSize = 22;
         this.labelSize = 12;
-        this.valueSize = 16;
-        this.showLabel = params.showLabel;
-        this.showValue = params.showValue;
-        this.posX = 100;    
-        this.posY = 500;
+        this.valueSize = 12;
+        this.showLabel = true;
+        this.showValue = true;
+        this.showLegend = true;
+        this.legendAlign = "top";
+        this.scaleTheChart = 1;
+        this.posX = _posX;    
+        this.posY = _posY;
         // chart template
         this.sideMargin = 20;
         this.barSpacing = 15;
@@ -36,20 +41,30 @@ class StackedBarChart {
         
         this.updateValues();
     }
-    
-    // addTotal(_array) {
-    //     for (let i = 0; i < this.data.length; i++) {
-    //         for (let j = 0; j < this.data[i].value.length; j++) {
-    //             if (j == _array) {
-
-    //             }
-    //         }
-    //     }
-    // }
 
     updateValues() {
-        this.showLabel = params.showLabel;
-        this.showValue = params.showValue;
+        if (params.Graph == "stacked") {
+            this.chartHeight = params.chartHeight;
+
+            this.numTicks = params.numOfTicks;
+            this.showLegend = params.showLegend;
+            this.titleAlign = params.titleAlign;
+            this.titleSize = params.titleSize;
+            this.showLabel = params.showLabel;
+            this.showValue = params.showValue;
+            this.legendAlign = params.legendAlign;
+            this.scaleTheChart = params.scaleTheChart;
+        } else {
+            this.chartHeight = this.chartHeight;
+            this.titleSize = this.titleSize;
+            this.titleAlign = this.titleAlign;
+            this.numTicks = this.numTicks;
+            this.showLegend = this.showLegend;
+            this.showValue = this.showValue;
+            this.legendAlign = this.legendAlign;
+            this.scaleTheChart = this.scaleTheChart;
+        }
+
         this.tickDistance = this.chartHeight / this.numTicks;
         // this.tickValue = this.maxValue / this.numTicks;
         // calculating the space remaining
@@ -61,28 +76,29 @@ class StackedBarChart {
         this.barWidth = this.remainingSpace / this.data.length;
         // for (let i = 0; i < this.data.length; i++) {
         //     for (let j = 0; j < this.data[i].value.length; j++) {
-        //         let listValues = this.data[i].value[j];
-        //         this.sumValues = this.sumValues + listValues;
-        //         console.log(this.sumValues)
-        //         this.maxValue = max(this.sumValues);
-        //     }
-        // }
-
-        // let listValues = this.data.map((num) => max(num.value));
-        // let sumValues;
-        // for (let i = 0; i < this.data.length; i++) {
-        //         sumValues = this.data[i].value.reduce(
-        //             (prevValue, curValue) => 
-        //             this.tempArray[i] = prevValue + curValue
-        //             );
-        this.listValues = this.data.map(function(x) {return x.openPrice + (x.closePrice - x.openPrice)});
-
-        // console.log(this.listLow)
-        // }
-        
-
-        this.maxValue = max(this.listValues);
-        this.maxValue += 400;
+            //         let listValues = this.data[i].value[j];
+            //         this.sumValues = this.sumValues + listValues;
+            //         console.log(this.sumValues)
+            //         this.maxValue = max(this.sumValues);
+            //     }
+            // }
+            
+            // let listValues = this.data.map((num) => max(num.value));
+            // let sumValues;
+            // for (let i = 0; i < this.data.length; i++) {
+                //         sumValues = this.data[i].value.reduce(
+                    //             (prevValue, curValue) => 
+                    //             this.tempArray[i] = prevValue + curValue
+                    //             );
+                    this.listValues = this.data.map(function(x) {return x.openPrice + (x.closePrice - x.openPrice)});
+                    
+                    // console.log(this.listLow)
+                    // }
+                    
+                    
+                    this.maxValue = max(this.listValues);
+                    this.maxValue += 400;
+                    
     
         // this.tempArray.push(listValues);
         // this.maxValue = max(listValues);
@@ -121,16 +137,24 @@ class StackedBarChart {
     }
 
     render() {
+
         // this.updateValues();
         
         push();
+        scale(this.scaleTheChart);
         
         translate(this.posX, this.posY);
         
         fill(tickColor);
-        textSize(36);
+        textSize(this.titleSize);
         textAlign(CENTER, BOTTOM);
-        text(this.title, this.chartWidth/2, -this.chartHeight - this.sideMargin - this.barSpacing);
+
+        if (this.titleAlign == 'top') {
+            text(this.title, this.chartWidth/2, -this.chartHeight - this.sideMargin - this.barSpacing*3);
+        } else if (this.titleAlign == 'bottom') {
+            text(this.title, this.chartWidth/2, this.sideMargin + this.barSpacing*7);
+        }
+
         // Draw Some Ticks
         for (let i = 0; i <= this.numTicks; i++) {
             noStroke();
@@ -163,11 +187,15 @@ class StackedBarChart {
             textAlign(CENTER, CENTER);
             
             noStroke();
-            // display bar labels on bottom of each bar
-            if (this.showLabel == true) {
+            fill(tickColor);
+            // display bar values on top of each bar
+            if (this.showValue) {
+                textSize(this.valueSize);
                 if (i % 7 == 0) {
-                textSize(this.labelSize);
-                text(this.data[i].date, this.barWidth * i + (this.barSpacing*i) + (this.barWidth / 2), this.sideMargin);
+                    push();
+                    rotate(-PI/2);
+                    text(this.data[i].date, - this.sideMargin - this.labelSize*2, this.barWidth * i + (this.barSpacing*i + this.labelSize));
+                    pop();
                 }
             }
 
@@ -227,22 +255,40 @@ class StackedBarChart {
             
         }
 
+        if (this.showLegend) {
+            if (this.legendAlign == "right") {
+                push();
+                translate(this.chartWidth + (this.sideMargin * 2), - this.chartHeight)
+                textSize(this.labelSize);
+                rectMode(CENTER);
+                fill(candleColors[0]);
+                rect(- 30, 40, 10, 10);
+                text("Open Price", this.sideMargin, 40);
+    
+                fill(candleColors[1]);
+                rect(- 30, 75, 10, 10);
+                text("Close Price", this.sideMargin, 75);
+                pop();
+            } else if (this.legendAlign == "top") {
+                push();
+                translate(this.chartWidth / 4, -this.chartHeight - 20)
+                textSize(this.labelSize);
+                rectMode(CENTER);
+                fill(candleColors[0]);
+                rect(-30, 0, 10, 10);
+                text("Open Price", this.sideMargin, 1);
+    
+                fill(candleColors[1]);
+                rect(this.sideMargin + 140, 0, 10, 10);
+                text("Close Price", this.sideMargin + 190, 1);
+                pop();
+            }
+        }
+
         // Chart lines
         this.drawVerticalChartAxis();
 
         pop();
     }
 
-    // animate(_minNum, _maxNum) {
-    
-    //     if (_minNum < _maxNum) {
-    //         _minNum += 10;
-    //         console.log(_minNum);
-    //         return _minNum;
-    //     } else if (_minNum == _maxNum) {
-    //         _minNum = _maxNum;
-    //         return _minNum;
-    //     }
-    
-    // }
 }
