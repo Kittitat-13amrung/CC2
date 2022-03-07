@@ -40,7 +40,6 @@ let data3 = [
 
 // parameters for CA GUI 
 let params = {
-  // Title: 'text',
   showBarValue: true,
   Graph: ["stacked", "candlestick", "stackedPercent"],
 
@@ -51,7 +50,6 @@ let params = {
 
   titleAlign: ["top", "bottom"],
 
-  // showLabel: true,
   showValue: true,
   showLegend: true,
   legendAlign: ["top", "right"],
@@ -59,10 +57,6 @@ let params = {
   numOfTicks: 5,
   numOfTicksMin: 3,
   numOfTicksMax: 15,
-
-  // chartWidth: 500,
-  // chartWidthMin: 50,
-  // chartWidthMax: 500,
 
   chartHeight: 400,
   chartHeightMin: 50,
@@ -190,6 +184,7 @@ let tickColor;
 function setup() {
   createCanvas(1550, 4500);
   background(90);
+
   // added GUI
   guiCA = createGui("CA Charts");
   guiCA.setPosition(width / 2 - 125, 220);

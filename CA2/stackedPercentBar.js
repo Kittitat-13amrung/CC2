@@ -215,21 +215,22 @@ class StackedPercentBarChart {
       );
 
       // animate bars
-      if (this.listOpen[i] < this.data[i].openPrice) {
+      if (this.listOpen[i] <= this.data[i].openPrice) {
         this.listOpen[i] += 50;
+      } else {
+        this.listOpen[i] = this.data[i].openPrice;
       }
 
-      if (this.listOpen[i] > this.data[i].openPrice) {
+      if (this.listOpen[i] >= this.data[i].openPrice) {
         if (this.listClose[i] < this.data[i].closePrice) {
           this.listClose[i] += 50;
+        } else {
+          this.listClose[i] = this.data[i].closePrice;
         }
       }
 
       pop();
     }
-
-    fill(30);
-    rect(-this.sideMargin, -this.chartHeight, this.chartWidth, -30);
 
     // legends
     // check if GUI's params is changed

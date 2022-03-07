@@ -214,11 +214,15 @@ class candleStick {
 
         // animate candlesticks
         if (this.listClose[i] < this.data[i].closePrice) {
-          this.listClose[i] += 50;
+          this.listClose[i] += 150;
+        } else {
+          this.listClose[i] = this.data[i].closePrice;
         }
 
         if (this.listOpen[i] < this.data[i].openPrice) {
-          this.listOpen[i] += 100;
+          this.listOpen[i] += 150;
+        } else {
+          this.listOpen[i] = this.data[i].openPrice;
         }
         // else if, open price is more than close price
       } else {
@@ -246,11 +250,15 @@ class candleStick {
 
         // animate candlesticks
         if (this.listClose[i] < this.data[i].closePrice) {
-          this.listClose[i] += 50;
+          this.listClose[i] += 150;
+        } else {
+          this.listClose[i] = this.data[i].closePrice
         }
 
         if (this.listOpen[i] < this.data[i].openPrice) {
-          this.listOpen[i] += 100;
+          this.listOpen[i] += 150;
+        } else {
+          this.listOpen[i] = this.data[i].openPrice;
         }
       }
 

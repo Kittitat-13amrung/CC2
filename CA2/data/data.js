@@ -13,6 +13,5 @@ function generateData() {
         ethereum[r].closePrice = float(ethereum[r].closePrice);
         ethereum[r].highPrice = float(ethereum[r].highPrice);
         ethereum[r].lowPrice = float(ethereum[r].lowPrice);
-        // ethereum[r].sumRevenue10mUSD = float(ethereum[r].sumRevenue10mUSD);
     }
 }

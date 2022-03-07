@@ -1,4 +1,4 @@
-class VerBarChart {
+    class VerBarChart {
     constructor(_data, _posX, _posY) {
         this.data = _data;
         this.title = "Fruits Sale in 2021";
